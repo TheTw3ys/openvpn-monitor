@@ -23,7 +23,7 @@ let file = "./Files/text.txt";
 /*Be aware that if started from other folders "text.txt" is not the same*/
 let renamed_file = "./Files/hello.txt";
 
-rename_file(renamed_file, file);
-rename_file(file, renamed_file);
-delete_file(renamed_file);
-create_file("./Files/hello.txt", "Hi");
+rename_file(renamed_file, file); /*renames the file*/ 
+rename_file(file, renamed_file); /*renames the file back to the original */
+delete_file(renamed_file); /* deletes the file */
+create_file(renamed_file, "Hi"); /* recreates the file so the cycle can be repeated */

@@ -1,0 +1,18 @@
+OpenVPN CLIENT LIST
+Updated,Fri Jul  1 11:41:50 2022
+Common Name,Real Address,Bytes Received,Bytes Sent,Connected Since
+novum-test-rig-vpn-client-22-0294_jt_001,217.254.144.110:34124,602121,979012,Thu Jun 30 10:01:45 2022
+novum-test-rig-vpn-client-novum_haupt_002,217.254.144.110:56722,10912,4997,Fri Jul  1 11:40:28 2022
+novum-test-rig-vpn-client-22-0296_db_001,217.254.144.110:54648,601751,979036,Thu Jun 30 10:01:45 2022
+novum-test-rig-vpn-client-21-0282_jt_001,80.243.52.58:53698,133774,267319,Fri Jul  1 06:02:20 2022
+novum-test-rig-vpn-client-21-0282_jt_002,217.254.144.110:37845,599788,978883,Thu Jun 30 10:01:45 2022
+ROUTING TABLE
+Virtual Address,Common Name,Real Address,Last Ref
+10.40.0.12,novum-test-rig-vpn-client-22-0294_jt_001,217.254.144.110:34124,Thu Jun 30 10:01:45 2022
+10.40.0.16,novum-test-rig-vpn-client-22-0296_db_001,217.254.144.110:54648,Thu Jun 30 10:01:45 2022
+10.40.0.8,novum-test-rig-vpn-client-21-0282_jt_001,80.243.52.58:53698,Fri Jul  1 06:02:21 2022
+10.40.0.104,novum-test-rig-vpn-client-novum_haupt_002,217.254.144.110:56722,Fri Jul  1 11:41:48 2022
+10.40.0.4,novum-test-rig-vpn-client-21-0282_jt_002,217.254.144.110:37845,Thu Jun 30 10:01:46 2022
+GLOBAL STATS
+Max bcast/mcast queue length,15
+END

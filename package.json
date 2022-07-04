@@ -8,9 +8,16 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "ts-node test.ts"
+    "start-test": "ts-node test.ts",
+    "dev": "yarn build && node ./service.js",
+    "build": "yarn build-app %% yarn build-service",
+    "build-app": "node scripts/build-app.mjs",
+    "build-service": "node scripts/build-service.mjs",
+    "pretty": "./node_modules/.bin/prettier --write \"**/*.{ts,js,mjs,json}\""
   },
   "dependencies": {
+    "esbuild": "^0.14.48",
+    "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   },

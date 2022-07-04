@@ -9,6 +9,7 @@
   "private": false,
   "scripts": {
     "start-test": "ts-node test.ts",
+    "watch": "yarn build-app --watch",
     "dev": "yarn build && yarn start",
     "start": "node ./.build/service.js",
     "build": "yarn build-app && yarn build-service",

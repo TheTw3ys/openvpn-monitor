@@ -8,7 +8,7 @@ const App = () => {
     <div>
       <Container>
         <h2>App</h2>
-        <p>Hello from my first app.</p>
+        <p>Hello from my first app. xy</p>
       </Container>
     </div>
   );

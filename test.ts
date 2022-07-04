@@ -78,33 +78,32 @@ function praseStuff(lines: Array<string>): TResult {
     }
     return list
   }
-  /*TODO: find out why string is not pushable to list when not type of any*/ 
+  /*TODO: find out why string is not pushable to list when not type of any*/
   const online = get_values(online_member);
   const offline = get_values(offline_member);
 
-  function get_clients(values): {
-    for () {
-
-    }
-    
-    function get_online_clients(value): OnlineClient {
-        const client = [
-          value[0], //IPV4
-          value[4], //common name
-          value[]
-                        
-      ]
-        return client
-      }
-    
-    clients: TResult = []
-    return clients;
+function get_clients(values): TResult{
+ //first idea
+  function get_online_clients(value): OnlineClient {
+    var date =  new Date(value[3]).toLocaleTimeString()
+    const client: OnlineClient = [
+      value[0], //IPV4
+      value[4], //common name
+      date,
+      parseInt(value[1]),
+      parseInt(value[2])
+    ]
+    return client
   }
-  get_clients(online);
-  return {
-    updatedAt: new Date(),
-    clients: [],
-  };
+
+  clients = []
+  return clients;
+}
+get_clients(online);
+return {
+  updatedAt: new Date(),
+  clients: [],
+};
 }
 
 const content = fs.readFileSync("./Files/vpn-status.log", "utf-8").trim(); // trimming in case of spaces

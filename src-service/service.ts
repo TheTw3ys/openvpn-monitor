@@ -32,7 +32,7 @@ app.get("/api/info", (req, res) => {
 });
 app.use((req, res) => res.sendFile(`${PUBLIC_PATH}/index.html`));
 
-webServer.listen(LISTEN_PORT, LISTEN_HOST, () => {
+webServer.listen(LISTEN_PORT, parseInt(LISTEN_HOST), () => {
   info(`The openvpn service is listening on [32m${LISTEN_HOST}[0m:[35m${LISTEN_PORT}[0m`);
   info(`|-> Serving conmtent from: [35m${PUBLIC_PATH}[0m`);
 });

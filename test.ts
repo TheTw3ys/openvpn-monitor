@@ -11,11 +11,13 @@ type Header = {
 type OnlineClient = {
   // a single client
   realIPV4Address: string;
+  virtualAddress: string;
   commonName: string;
   connectedSince: Date | null;
   bytesReceived: number | null;
   bytesSent: number | null;
   LastReference: Date | "Now";
+  Online: boolean;
 };
 
 type TState = {
@@ -84,6 +86,12 @@ function getWorkLines(lines: Array<string>) {
 
   offline_members.forEach((member: string) => {
     const details = member.split(",");
+    if (details[2]) {
+      var ipAdress: Array<string> = details[2].split(":");
+      ipAdress.splice(-1);
+    } else {
+      ipAdress = [""];
+    }
     const name = details[1];
 
     state.clients[name] = {
@@ -92,12 +100,20 @@ function getWorkLines(lines: Array<string>) {
       bytesSent: 0,
       connectedSince: null,
       LastReference: new Date(details[3]),
-      realIPV4Address: details[2],
+      realIPV4Address: ipAdress.toString(),
+      virtualAddress: details[0],
+      Online: false,
     };
   });
 
   online_members.forEach((member: string) => {
     const details = member.split(",");
+    if (details[1]) {
+      var ipAdress: Array<string> = details[1].split(":");
+      ipAdress.splice(-1);
+    } else {
+      ipAdress = [""];
+    }
     const name = details[0];
 
     const onlineClient = {
@@ -106,7 +122,9 @@ function getWorkLines(lines: Array<string>) {
       bytesSent: parseInt(details[3]),
       connectedSince: new Date(details[4]),
       LastReference: new Date(),
-      realIPV4Address: details[1],
+      realIPV4Address: ipAdress.toString(),
+      virtualAddress: "",  //TODO 1.
+      Online: true,
     };
     if (state.clients[name] != null) {
       state.clients[name] = { ...state.clients[name], ...onlineClient }; //overwrite in case of key being used
@@ -114,7 +132,7 @@ function getWorkLines(lines: Array<string>) {
       state.clients[name] = onlineClient;
     }
   });
-  state.updatedAt = new Date()
+  state.updatedAt = new Date();
 }
 
 async function execute(): Promise<void> {
@@ -122,11 +140,12 @@ async function execute(): Promise<void> {
   const trimmed_log_file = file.split("\n"); //Array content
   getWorkLines(trimmed_log_file);
 }
-
+execute();
 setInterval(execute, 4000);
-setInterval(function(){
-  console.log("*******************************")
-  console.log(state)}, 4000)
+setInterval(function () {
+  console.log("*******************************");
+  console.log(state);
+}, 4000);
 
 var d = new Date("Thu Jun 30 10:01:46 2022");
 console.log(d.toLocaleTimeString());

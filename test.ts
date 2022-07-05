@@ -1,4 +1,5 @@
 import fs from "fs";
+import { State } from "history";
 import { type } from "os";
 import { resourceLimits } from "worker_threads";
 
@@ -86,12 +87,12 @@ function getWorkLines(lines: Array<string>) {
     const name = details[1];
 
     state.clients[name] = {
-      bytesReceived: parseInt(details[2]),
+      bytesReceived: 0,
       commonName: details[1],
       bytesSent: 0,
-      connectedSince: new Date(),
-      LastReference: new Date(),
-      realIPV4Address: "",
+      connectedSince: null,
+      LastReference: new Date(details[3]),
+      realIPV4Address: details[2],
     };
   });
 
@@ -112,10 +113,20 @@ function getWorkLines(lines: Array<string>) {
     } else {
       state.clients[name] = onlineClient;
     }
-    console.log(state);
   });
+  state.updatedAt = new Date()
 }
 
+async function execute(): Promise<void> {
+  const file = await fs.readFileSync("./Files/vpn-status.log", "utf-8");
+  const trimmed_log_file = file.split("\n"); //Array content
+  getWorkLines(trimmed_log_file);
+}
+
+setInterval(execute, 4000);
+setInterval(function(){
+  console.log("*******************************")
+  console.log(state)}, 4000)
 
 var d = new Date("Thu Jun 30 10:01:46 2022");
 console.log(d.toLocaleTimeString());

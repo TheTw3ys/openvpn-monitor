@@ -1,12 +1,4 @@
 import fs from "fs";
-import { State } from "history";
-import { type } from "os";
-import { resourceLimits } from "worker_threads";
-
-type Header = {
-  // the header of the table
-  header?: Array<string>;
-};
 
 type OnlineClient = {
   // a single client
@@ -20,34 +12,34 @@ type OnlineClient = {
   Online: boolean;
 };
 
-type TState = {
+export type TState = {
   updatedAt: Date;
   clients: { [id: string]: OnlineClient };
   //header: Header;
 };
 
-const state: TState = {
+export const state: TState = {
   updatedAt: new Date(),
   clients: {},
 };
 
-function get_lines(
-  lines: Array<string>,
-  min: number,
-  max: number
-): Array<string> {
-  var end_lines: Array<string> = [];
-  var count = max - min;
-  for (let x = 0; x < Array(count).length; x++) {
-    end_lines.push(lines[x + min]);
-  }
-
-  return end_lines;
-}
-
 function getWorkLines(lines: Array<string>) {
   const start_online: number = lines.indexOf("OpenVPN CLIENT LIST");
   const start_offline: number = lines.indexOf("ROUTING TABLE");
+
+  function get_lines(
+    lines: Array<string>,
+    min: number,
+    max: number
+  ): Array<string> {
+    var end_lines: Array<string> = [];
+    var count = max - min;
+    for (let x = 0; x < Array(count).length; x++) {
+      end_lines.push(lines[x + min]);
+    }
+
+    return end_lines;
+  }
 
   function getOnlineWorkLines(): Array<string> {
     for (let x = 0; x < lines.length; x++) {
@@ -84,14 +76,8 @@ function getWorkLines(lines: Array<string>) {
   const online_members: Array<string> = getOnlineWorkLines();
   const offline_members: Array<string> = getOfflineWorkLines();
 
-  offline_members.forEach((member: string) => {
-    const details = member.split(",");
-    if (details[2]) {
-      var ipAdress: Array<string> = details[2].split(":");
-      ipAdress.splice(-1);
-    } else {
-      ipAdress = [""];
-    }
+  offline_members.forEach((offlineMember: string) => {
+    const details = offlineMember.split(",");
     const name = details[1];
 
     state.clients[name] = {
@@ -100,30 +86,24 @@ function getWorkLines(lines: Array<string>) {
       bytesSent: 0,
       connectedSince: null,
       LastReference: new Date(details[3]),
-      realIPV4Address: ipAdress.toString(),
+      realIPV4Address: details[2] != null ? details[2].split(":")[0] : "",
       virtualAddress: details[0],
       Online: false,
     };
   });
 
-  online_members.forEach((member: string) => {
-    const details = member.split(",");
-    if (details[1]) {
-      var ipAdress: Array<string> = details[1].split(":");
-      ipAdress.splice(-1);
-    } else {
-      ipAdress = [""];
-    }
+  online_members.forEach((onlineMember: string) => {
+    const details = onlineMember.split(",");
     const name = details[0];
-
+    //console.log(state.clients[name])
     const onlineClient = {
       bytesReceived: parseInt(details[2]),
       commonName: details[0],
       bytesSent: parseInt(details[3]),
       connectedSince: new Date(details[4]),
       LastReference: new Date(),
-      realIPV4Address: ipAdress.toString(),
-      virtualAddress: "",  //TODO 1.
+      realIPV4Address: details[1] != null ? details[1].split(":")[0] : "",
+      virtualAddress: "", //TODO 1.
       Online: true,
     };
     if (state.clients[name] != null) {
@@ -132,20 +112,33 @@ function getWorkLines(lines: Array<string>) {
       state.clients[name] = onlineClient;
     }
   });
+
   state.updatedAt = new Date();
+  offline_members.forEach((offlineMember: string) => {
+    // redefining because virtualAddress is not accessible for onlineClients
+    const details = offlineMember.split(",");
+    const name = details[1];
+    const client = state.clients[name];
+    const offlineClient = {
+      bytesReceived: client.bytesReceived,
+      commonName: client.commonName,
+      bytesSent: client.bytesSent,
+      connectedSince: client.connectedSince,
+      LastReference: client.LastReference,
+      realIPV4Address: client.realIPV4Address,
+      virtualAddress: details[0],
+      Online: client.Online,
+    };
+    if (state.clients[name] != null) {
+      state.clients[name] = { ...state.clients[name], ...offlineClient }; //overwrite in case of key being used
+    } else {
+      state.clients[name] = offlineClient;
+    }
+  });
 }
 
-async function execute(): Promise<void> {
-  const file = await fs.readFileSync("./Files/vpn-status.log", "utf-8");
+export function parseVPNStatusLog() {
+  const file = fs.readFileSync("./Files/vpn-status.log", "utf-8");
   const trimmed_log_file = file.split("\n"); //Array content
   getWorkLines(trimmed_log_file);
 }
-execute();
-setInterval(execute, 4000);
-setInterval(function () {
-  console.log("*******************************");
-  console.log(state);
-}, 4000);
-
-var d = new Date("Thu Jun 30 10:01:46 2022");
-console.log(d.toLocaleTimeString());

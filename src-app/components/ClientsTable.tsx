@@ -1,9 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect } from "react";
+import { TState } from "../../lib/types";
+import { apiClient } from "../apiClient";
 import { Container, Table } from "react-bootstrap";
-import { BrowserRouter } from "react-router-dom";
-import { TState } from "../../src-service/parse-log";
-///*
+
+/*
 const state = {
   updatedAt: "2022-07-06T07:17:30.182Z",
   clients: {
@@ -59,10 +59,25 @@ const state = {
     },
   },
 };
-//*/
-//const state: TState = new Request("127.0.0.1/api/openvpn_state");
+*/
 
 export const TableApp = () => {
+  const [state, setState] = useState<TState>({
+    updatedAt: "2022-07-06T07:17:30.182Z",
+    clients: {},
+  });
+
+  const pollState = async () => {
+    setState(await apiClient.getState());
+  };
+
+  useEffect(() => {
+    let timer = setInterval(pollState, 5000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <div>
       <Container>
@@ -130,4 +145,3 @@ export const TableApp = () => {
     </div>
   );
 };
-

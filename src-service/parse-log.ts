@@ -1,22 +1,5 @@
 import fs from "fs";
-
-type OnlineClient = {
-  // a single client
-  realIPV4Address: string;
-  virtualAddress: string;
-  commonName: string;
-  connectedSince: Date | null;
-  bytesReceived: number | null;
-  bytesSent: number | null;
-  LastReference: Date | "Now";
-  Online: boolean;
-};
-
-export type TState = {
-  updatedAt: Date;
-  clients: { [id: string]: OnlineClient };
-  //header: Header;
-};
+import { TState } from "../lib/types";
 
 export const state: TState = {
   updatedAt: new Date(),

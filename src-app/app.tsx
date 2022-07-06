@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Container, Table } from "react-bootstrap";
-import { BrowserRouter } from "react-router-dom";
-import { connected } from "process";
 import { TableApp } from "./components/ClientsTable";
+import { Container } from "react-bootstrap";
+import { BrowserRouter } from "react-router-dom";
 
 const App = () => {
   return (
@@ -21,7 +20,7 @@ const OuterApp = () => {
   return (
     <BrowserRouter>
       <App />
-      <TableApp /> // ./components/ClientsTable
+      <TableApp />
     </BrowserRouter>
   );
 };

@@ -63,16 +63,18 @@ const state = {
 
 export const TableApp = () => {
   const [state, setState] = useState<TState>({
-    updatedAt: "2022-07-06T07:17:30.182Z",
+    updatedAt: new Date(),
     clients: {},
   });
-
+  
   const pollState = async () => {
-    setState(await apiClient.getState());
+    const huba = await apiClient.getState()
+    console.log(huba);
+    setState(huba);
   };
 
   useEffect(() => {
-    let timer = setInterval(pollState, 5000);
+    let timer = setInterval(pollState, 4000);
     return () => {
       clearTimeout(timer);
     };
@@ -81,7 +83,7 @@ export const TableApp = () => {
   return (
     <div>
       <Container>
-        <Table striped bordered responsive hover>
+        <Table striped responsive hover>
           <thead>
             <tr>
               <th>Common Name</th>
@@ -98,6 +100,7 @@ export const TableApp = () => {
           <tbody>
             {Object.keys(state.clients).map((clientName) => {
               const client = state.clients[clientName];
+              console.log(client);
               var connectedSinceString;
               const month = [
                 "January",

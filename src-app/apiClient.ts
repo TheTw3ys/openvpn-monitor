@@ -16,8 +16,8 @@ class APIClient {
     });
   }
 
-  async getState(): Promise<Array<TState>> {
-    return fetch("/api/state").then((response) => {
+  async getState(): Promise<TState> {
+    return fetch("/api/openvpn_state").then((response) => {
       if (!response.ok) {
         throw new Error(response.statusText);
       }
@@ -25,5 +25,6 @@ class APIClient {
     });
   }
 }
-
+const client = new APIClient();
+console.log(client.getInfo());
 export const apiClient = new APIClient();

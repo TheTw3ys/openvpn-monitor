@@ -1,4 +1,4 @@
-import { TState } from "../lib/types";
+import { TVPNState } from "../lib/types";
 
 type TInfo = {
   description: string;
@@ -16,8 +16,17 @@ class APIClient {
     });
   }
 
-  async getState(): Promise<TState> {
-    return fetch("/api/openvpn_state").then((response) => {
+  async getVPNNames(): Promise<Array<string>> {
+    return fetch("/api/vpn_names").then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    });
+  }
+
+  async getState(vpnName: string): Promise<TVPNState> {
+    return fetch(`/api/openvpn_state/${vpnName}`).then((response) => {
       if (!response.ok) {
         throw new Error(response.statusText);
       }

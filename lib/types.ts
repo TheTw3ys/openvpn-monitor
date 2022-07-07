@@ -10,8 +10,12 @@ export type OnlineClient = {
   Online: boolean;
 };
 
-export type TState = {
+export type TVPNState = {
   updatedAt: Date;
+  logname: string;
   clients: { [id: string]: OnlineClient };
-  //header: Header;
+};
+
+export type TVPNStates = {
+  [vpnName: string]: TVPNState;
 };

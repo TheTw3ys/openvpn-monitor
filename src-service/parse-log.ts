@@ -1,12 +1,50 @@
-import fs from "fs";
-import { TState } from "../lib/types";
+import fs, { readdirSync } from "fs";
+import { parse } from "path";
+import { TVPNState, TVPNStates } from "../lib/types";
 
-export const state: TState = {
+/*
+export const state: TVPNState = {
   updatedAt: new Date(),
-  clients: {},
+  clients: {}
+};
+*/
+
+export const states: TVPNStates = {};
+
+type TVPNStatusFile = {
+  vpnName: string;
+  fileName: string;
 };
 
-function getWorkLines(lines: Array<string>) {
+function findOpenVPNStatusFiles(openVPNLogPath: string): Array<TVPNStatusFile> {
+  console.log(openVPNLogPath);
+  const files = fs.readdirSync(openVPNLogPath);
+  const logfiles: Array<TVPNStatusFile> = [];
+  files.forEach((fileName) => {
+    const segmentsOfFileName = fileName.split(".");
+
+    if (
+      segmentsOfFileName[segmentsOfFileName.length - 2] === "status" &&
+      segmentsOfFileName[segmentsOfFileName.length - 1] === "log"
+    ) {
+      logfiles.push({
+        vpnName: segmentsOfFileName.slice(0, -2).join("."),
+        fileName,
+      });
+    }
+  });
+  console.log(logfiles);
+
+  return logfiles;
+}
+
+function getWorkLines(lines: Array<string>, logname: string): TVPNState {
+  const state: TVPNState = {
+    updatedAt: new Date(),
+    logname: logname,
+    clients: {},
+  };
+
   const start_online: number = lines.indexOf("OpenVPN CLIENT LIST");
   const start_offline: number = lines.indexOf("ROUTING TABLE");
 
@@ -107,7 +145,7 @@ function getWorkLines(lines: Array<string>) {
       commonName: client.commonName,
       bytesSent: client.bytesSent,
       connectedSince: client.connectedSince,
-      LastReference: client.LastReference,
+      LastReference: new Date(details[3]),
       realIPV4Address: client.realIPV4Address,
       virtualAddress: details[0],
       Online: client.Online,
@@ -118,10 +156,20 @@ function getWorkLines(lines: Array<string>) {
       state.clients[name] = offlineClient;
     }
   });
+  return state;
 }
 
-export function parseVPNStatusLog() {
-  const file = fs.readFileSync("./Files/vpn-status.log", "utf-8");
-  const trimmed_log_file = file.split("\n"); //Array content
-  getWorkLines(trimmed_log_file);
+export function parseVPNStatusLogs(openVPNLogPath: string) {
+  findOpenVPNStatusFiles(openVPNLogPath).forEach(
+    (logFileObject: TVPNStatusFile) => {
+      const file = fs
+        .readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`)
+        .toString();
+      const trimmed_log_file = file.split("\n"); //Array content
+      states[logFileObject.vpnName] = getWorkLines(
+        trimmed_log_file,
+        logFileObject.vpnName
+      );
+    }
+  );
 }

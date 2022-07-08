@@ -6,12 +6,16 @@ export type OnlineClient = {
   connectedSince: Date | null;
   bytesReceived: number | null;
   bytesSent: number | null;
-  LastReference: Date | 'Now';
+  LastReference: Date;
   Online: boolean;
 };
 
-export type TState = {
+export type TVPNState = {
   updatedAt: Date;
+  logname: string;
   clients: { [id: string]: OnlineClient };
-  //header: Header;
+};
+
+export type TVPNStates = {
+  [vpnName: string]: TVPNState;
 };

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { TableApp } from './components/ClientsTable';
 import { apiClient } from './apiClient';
 import { BrowserRouter } from 'react-router-dom';
+import { VPNStatusTable } from './components/VPNStatusTable';
 import { Container, Tabs, Tab } from 'react-bootstrap';
 
 const App = () => {
@@ -27,8 +27,8 @@ const App = () => {
         <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
           {VPNNames.map((name) => {
             return (
-              <Tab eventKey={name} title={name}>
-                <TableApp vpnName={name} />
+              <Tab key={name} eventKey={name} title={name}>
+                <VPNStatusTable vpnName={name} />
               </Tab>
             );
           })}

@@ -8,7 +8,7 @@ import { info } from './utils';
 import { defineAllRoutes } from './routes';
 import { parseVPNStatusLogs } from './parse-log';
 
-const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || './Logs';
+const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || './example-logs';
 const LISTEN_HOST = process.env.LISTEN_HOST || '0.0.0.0';
 const LISTEN_PORT = process.env.LISTEN_PORT || 3000;
 const PUBLIC_PATH = (
@@ -29,6 +29,8 @@ app.use(express.static(PUBLIC_PATH));
 defineAllRoutes(app);
 
 app.use((req, res) => res.sendFile(`${PUBLIC_PATH}/index.html`));
+
+parseVPNStatusLogs(OPENVPN_LOG_PATH);
 setInterval(() => parseVPNStatusLogs(OPENVPN_LOG_PATH), 4000);
 
 webServer.listen(LISTEN_PORT, parseInt(LISTEN_HOST), () => {

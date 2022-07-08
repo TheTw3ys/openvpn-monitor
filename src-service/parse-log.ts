@@ -98,7 +98,6 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   online_members.forEach((onlineMember: string) => {
     const details = onlineMember.split(',');
     const name = details[0];
-    //console.log(state.clients[name])
     const onlineClient = {
       bytesReceived: parseInt(details[2]),
       commonName: details[0],
@@ -106,7 +105,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
       connectedSince: new Date(details[4]),
       LastReference: new Date(),
       realIPV4Address: details[1] != null ? details[1].split(':')[0] : '',
-      virtualAddress: '', //TODO 1.
+      virtualAddress: '',
       Online: true,
     };
     if (state.clients[name] != null) {

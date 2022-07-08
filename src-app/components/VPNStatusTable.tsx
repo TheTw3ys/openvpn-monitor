@@ -5,11 +5,11 @@ import { TVPNState } from '../../lib/types';
 import { apiClient } from '../apiClient';
 import { CreateBadge } from './Badge';
 
-type TableAppProps = {
+type VPNStatusTableProps = {
   vpnName: string;
 };
 
-export const TableApp = (props: TableAppProps) => {
+export const VPNStatusTable = (props: VPNStatusTableProps) => {
   const [state, setState] = useState<TVPNState>({
     updatedAt: new Date(),
     logname: '',

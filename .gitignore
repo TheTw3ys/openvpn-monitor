@@ -3,5 +3,5 @@ node_modules
 public/js/bundle.js
 public/js/bundle.js.map
 ./Files/unused/
-./Logs/*
+./example-logs/*
 TODO

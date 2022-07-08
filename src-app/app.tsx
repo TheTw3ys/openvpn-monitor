@@ -25,8 +25,8 @@ const App = () => {
     <div>
       <p></p>
       <Container>
-        <h1>OpenVPNStatusTable</h1>
-        <h5>These tables show fetched data from the OpenVPNLogFiles</h5>
+        <h1>OpenVPN Status Table</h1>
+        <h5>These tables show fetched data from the OpenVPN status log files</h5>
         <p></p>
       </Container>
       <Container>

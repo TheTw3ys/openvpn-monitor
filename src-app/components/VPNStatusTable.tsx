@@ -40,25 +40,28 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <TableHeadTriggerTooltip TooltipString="The Name of the client in the OpenVPN" CollumnName="Common Name" />
-            <TableHeadTriggerTooltip TooltipString="The IP-Address of the client" CollumnName="Source IP" />
-            <TableHeadTriggerTooltip TooltipString="The virtual Address of the client" CollumnName="Virtual Address" />
+            <TableHeadTriggerTooltip TooltipString="The name of the client" CollumnName="Client name" />
+            <TableHeadTriggerTooltip TooltipString="The Source IP-Address of the client" CollumnName="Source IP" />
+            <TableHeadTriggerTooltip TooltipString="The virtual address of the client" CollumnName="VPNAddress" />
             <TableHeadTriggerTooltip
-              TooltipString="The Bytes the Server received from the client"
-              CollumnName="Received Bytes"
+              TooltipString="Amount of data received by the server from the client"
+              CollumnName="Bytes received"
             />
-            <TableHeadTriggerTooltip TooltipString="The Bytes the Server sent to the client" CollumnName="Sent Bytes" />
+            <TableHeadTriggerTooltip
+              TooltipString="Amount of data the server has sent to the client"
+              CollumnName="Bytes sent"
+            />
             <TableHeadTriggerTooltip
               TooltipString="The Date and time since the client is connected to the OpenVPN"
-              CollumnName="Connected since"
+              CollumnName="Connected at"
             />
             <TableHeadTriggerTooltip
               TooltipString="The time since the last connection was made between the client and the OpenVPN"
-              CollumnName="Last Connection-Reference"
+              CollumnName="Last seen"
             />
             <TableHeadTriggerTooltip
               TooltipString="If the Client has a connection to the OpenVPN"
-              CollumnName="Connection-Status"
+              CollumnName="Status"
             />
           </tr>
         </thead>

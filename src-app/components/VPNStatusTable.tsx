@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
 import { Table } from 'react-bootstrap';
@@ -54,8 +53,8 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
             if (client.connectedSince != null) {
               connectedSinceObject = new Date(client.connectedSince);
             } else {
-              connectedSinceObject = "/";
-           }
+              connectedSinceObject = '/';
+            }
 
             return (
               <tr>
@@ -73,10 +72,7 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
 
                 <td align="center">
                   <h4>
-                    <CreateReferenceBadge
-                      LastReference={client.LastReference}
-                      ConnectionStatus={client.Online}
-                    />
+                    <CreateReferenceBadge LastReference={client.LastReference} ConnectionStatus={client.Online} />
                   </h4>
                 </td>
 

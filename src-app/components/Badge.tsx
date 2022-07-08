@@ -13,55 +13,48 @@ type CreateStatusBadgeProps = {
   boolean: boolean;
 };
 
-export function CreateReferenceBadge(
-  props: CreateReferenceBadgeProps
-): React.ReactElement {
+export function CreateReferenceBadge(props: CreateReferenceBadgeProps): React.ReactElement {
   console.log(props.LastReference);
 
   const rightNow = new Date();
   const millisBetween = rightNow.getTime() - new Date(props.LastReference).getTime();
   let badgeType = '';
   if (millisBetween <= 360000) {
-
-badgeType = "success"; //below 6 min
-} else {
-  if (millisBetween <= 1860000) {
-    badgeType = "warning"; //below 31 min
+    badgeType = 'success'; //below 6 min
   } else {
-    // over 31 min
-    if (props.ConnectionStatus === true) {
-      badgeType = "danger";
+    if (millisBetween <= 1860000) {
+      badgeType = 'warning'; //below 31 min
     } else {
-      badgeType = "dark";
-    }
+      // over 31 min
+      if (props.ConnectionStatus === true) {
+        badgeType = 'danger';
+      } else {
+        badgeType = 'dark';
+      }
     }
   }
   return <Badge bg={badgeType}>{moment(props.LastReference).fromNow()}</Badge>;
 }
-export function CreateSinceBadge(
-  props: CreateSinceBadgeProps
-): React.ReactElement {
+export function CreateSinceBadge(props: CreateSinceBadgeProps): React.ReactElement {
   let Since: any;
-  if (props.SinceDate != "/") {
-    Since = moment(new Date(props.SinceDate)).format("l LTS");
+  if (props.SinceDate != '/') {
+    Since = moment(new Date(props.SinceDate)).format('l LTS');
   } else {
-    Since = "/";
+    Since = '/';
   }
 
   return <Badge bg="secondary">{Since}</Badge>;
 }
-export function CreateStatusBadge(
-  props: CreateStatusBadgeProps
-): React.ReactElement {
+export function CreateStatusBadge(props: CreateStatusBadgeProps): React.ReactElement {
   let bool = props.boolean;
   let response;
   let badgeType;
   if (bool == true) {
-    response = "Online";
-    badgeType = "success";
+    response = 'Online';
+    badgeType = 'success';
   } else {
-    response = "Offline";
-    badgeType = "danger";
+    response = 'Offline';
+    badgeType = 'danger';
   }
 
   return <Badge bg={badgeType}>{response}</Badge>;

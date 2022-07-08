@@ -1,0 +1,53 @@
+version: '2.3'
+networks:
+  novum-testrig-network:
+    driver: bridge
+    name: openvpn-network
+x-default-config:
+  networks: &ref_0
+    - openvpn-network
+  restart: always
+
+services:
+  influx:
+    networks: *ref_0
+    restart: always
+    image: 'influxdb:2.1-alpine'
+    container_name: influx
+    ports:
+      - '127.0.0.1:8086:8086'
+    volumes:
+      - 'influx-data:/var/lib/influxdb2'
+      - 'influx-config:/etc/influxdb2'
+    env_file:
+      - .env
+    healthcheck:
+      test:
+        - CMD
+        - influx
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  openvpn-monitor:
+    networks: *ref_0
+    image: 'openvpn-monitor:v1.0.0'
+    ports:
+      - '7749:7749'
+    depends_on:
+      - communicator-service
+    volumes:
+      - './config.json:/usr/src/app/config.json'
+    env_file:
+      - .env
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '--fail'
+        - 'http://localhost:3000/api/v1/version'
+      retries: 5
+      timeout: 10s
+      interval: 10s
+      start_period: 20s

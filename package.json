@@ -1,6 +1,6 @@
 {
   "name": "openvpn-monitor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "To show connected vpn clients in a small webpage dynamicly.",
   "main": "server.js",
   "repository": "git@github.com:TheTw3ys/openvpn-monitor.git",
@@ -14,7 +14,10 @@
     "build": "yarn build-app && yarn build-service",
     "build-app": "node scripts/build-app.mjs",
     "build-service": "node scripts/build-service.mjs",
-    "pretty": "./node_modules/.bin/prettier --write \"**/*.{ts,js,mjs,json,tsx,md }\""
+    "pretty": "./node_modules/.bin/prettier --write \"**/*.{ts,js,mjs,json,tsx,md,yml}\"",
+    "build-docker-amd64": "yarn build && DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS=plain docker build --no-cache -t openvpn-monitor:v1.0.1-amd64 --build-arg ARCH=amd64 .",
+    "build-docker-arm64": "yarn build && DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS=plain docker build --no-cache -t openvpn-monitor:v1.0.1-arm64 --build-arg ARCH=arm64 .",
+    "create-docker-manifest": "docker manifest create openvpn-monitor:v1.0.1 --amend openvpn-monitor:v1.0.1-amd64 --amend openvpn-monitor:v1.0.1-arm64"
   },
   "dependencies": {
     "@types/express": "^4.17.13",

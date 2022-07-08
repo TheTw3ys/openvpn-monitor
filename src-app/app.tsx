@@ -4,7 +4,10 @@ import { apiClient } from './apiClient';
 import { BrowserRouter } from 'react-router-dom';
 import { VPNStatusTable } from './components/VPNStatusTable';
 import { Container, Tabs, Tab } from 'react-bootstrap';
+import moment from 'moment';
+import 'moment/locale/de';
 
+moment.locale('de');
 const App = () => {
   const [VPNNames, setVPNNames] = useState<Array<string>>([]);
 
@@ -20,11 +23,14 @@ const App = () => {
 
   return (
     <div>
+      <p></p>
       <Container>
+        <h1>OpenVPNStatusTable</h1>
+        <h5>These tables show fetched data from the OpenVPNLogFiles</h5>
         <p></p>
-        <h2>App</h2>
-        <p>Hello from my first app</p>
-        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
+      </Container>
+      <Container>
+        <Tabs defaultActiveKey= {VPNNames[0]} id="VPNLog" className="mb-3">
           {VPNNames.map((name) => {
             return (
               <Tab key={name} eventKey={name} title={name}>

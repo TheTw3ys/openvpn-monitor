@@ -31,7 +31,6 @@ app.use(express.static(PUBLIC_PATH));
 defineAllRoutes(app);
 
 app.use((req, res) => res.sendFile(`${PUBLIC_PATH}/index.html`));
-
 setInterval(() => parseVPNStatusLogs(OPENVPN_LOG_PATH), 4000);
 
 webServer.listen(LISTEN_PORT, parseInt(LISTEN_HOST), () => {

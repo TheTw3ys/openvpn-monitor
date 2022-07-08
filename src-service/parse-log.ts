@@ -17,7 +17,6 @@ type TVPNStatusFile = {
 };
 
 function findOpenVPNStatusFiles(openVPNLogPath: string): Array<TVPNStatusFile> {
-  console.log(openVPNLogPath);
   const files = fs.readdirSync(openVPNLogPath);
   const logfiles: Array<TVPNStatusFile> = [];
   files.forEach((fileName) => {
@@ -33,7 +32,6 @@ function findOpenVPNStatusFiles(openVPNLogPath: string): Array<TVPNStatusFile> {
       });
     }
   });
-  console.log(logfiles);
 
   return logfiles;
 }

@@ -6,7 +6,7 @@ export type OnlineClient = {
   connectedSince: Date | null;
   bytesReceived: number | null;
   bytesSent: number | null;
-  LastReference: Date | "Now";
+  LastReference: Date;
   Online: boolean;
 };
 

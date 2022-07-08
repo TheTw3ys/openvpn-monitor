@@ -12,7 +12,6 @@ export function defineAllRoutes(app) {
   });
 
   app.get("/api/openvpn_state/:openvpnName", (req, res) => {
-    console.log(req.params);
     const openVPNName = req.params.openvpnName;
     if (openVPNName != null) {
       if (states[openVPNName] != null) {

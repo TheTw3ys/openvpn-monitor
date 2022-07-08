@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TVPNState } from "../../lib/types";
 import { apiClient } from "../apiClient";
-import { Container, Table, Tabs, Tab } from "react-bootstrap";
+import { Container, Table, Tabs, Tab, Badge } from "react-bootstrap";
+import moment from "moment-timezone";
+import { CreateBadge } from "./Badge";
 
 type TableAppProps = {
   vpnName: string;
@@ -16,7 +18,6 @@ export const TableApp = (props: TableAppProps) => {
 
   const pollState = async () => {
     const huba = await apiClient.getState(props.vpnName);
-    console.log(huba);
     setState(huba);
   };
 
@@ -29,8 +30,8 @@ export const TableApp = (props: TableAppProps) => {
 
   return (
     <div>
-      <p>This Table was Updated at {new Date().toLocaleTimeString()}</p>
-      <Table striped responsive hover>
+      <p>This Table was Updated at {new Date().toLocaleTimeString()} </p>
+      <Table>
         <thead>
           <tr>
             <th>Common Name</th>
@@ -47,32 +48,15 @@ export const TableApp = (props: TableAppProps) => {
         <tbody>
           {Object.keys(state.clients).map((clientName) => {
             const client = state.clients[clientName];
-            console.log(client);
             var connectedSinceString;
-            const month = [
-              "January",
-              "February",
-              "March",
-              "April",
-              "May",
-              "June",
-              "July",
-              "August",
-              "September",
-              "October",
-              "November",
-              "December",
-            ];
 
             if (client.connectedSince != null) {
-              const connectedSince = new Date(client.connectedSince);
-              connectedSinceString = `${
-                month[connectedSince.getMonth()]
-              } ${connectedSince.getDate()}, ${connectedSince.getFullYear()} ${connectedSince.toLocaleTimeString()}`;
+              connectedSinceString = moment(client.connectedSince).format(
+                "ll LTS"
+              );
             } else {
               connectedSinceString = "/";
             }
-            const lastReference = new Date(client.LastReference);
 
             return (
               <tr>
@@ -82,9 +66,9 @@ export const TableApp = (props: TableAppProps) => {
                 <td align="center">{client.bytesReceived}</td>
                 <td align="center">{client.bytesSent}</td>
                 <td align="center">{connectedSinceString}</td>
-                <td align="center">{`${
-                  month[lastReference.getMonth()]
-                } ${lastReference.getDate()}, ${lastReference.getFullYear()} ${lastReference.toLocaleTimeString()}`}</td>
+                <td align="center">
+                  <CreateBadge LastReference={client.LastReference} />
+                </td>
                 <td align="center">{`${client.Online}`}</td>
               </tr>
             );

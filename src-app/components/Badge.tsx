@@ -1,7 +1,6 @@
-import moment, { lang } from "moment";
-import React from "react";
-import { Badge } from "react-bootstrap";
-import "moment/locale/de"
+import moment from 'moment';
+import React from 'react';
+import { Badge } from 'react-bootstrap';
 
 type CreateReferenceBadgeProps = {
   LastReference: Date;
@@ -20,21 +19,21 @@ export function CreateReferenceBadge(
   console.log(props.LastReference);
 
   const rightNow = new Date();
-  const millisBetween =
-    rightNow.getTime() - new Date(props.LastReference).getTime();
-  let badgeType = "";
+  const millisBetween = rightNow.getTime() - new Date(props.LastReference).getTime();
+  let badgeType = '';
   if (millisBetween <= 360000) {
-    badgeType = "success"; //below 6 min
+
+badgeType = "success"; //below 6 min
+} else {
+  if (millisBetween <= 1860000) {
+    badgeType = "warning"; //below 31 min
   } else {
-    if (millisBetween <= 1860000) {
-      badgeType = "warning"; //below 31 min
+    // over 31 min
+    if (props.ConnectionStatus === true) {
+      badgeType = "danger";
     } else {
-      // over 31 min
-      if (props.ConnectionStatus === true) {
-        badgeType = "danger";
-      } else {
-        badgeType = "dark";
-      }
+      badgeType = "dark";
+    }
     }
   }
   return <Badge bg={badgeType}>{moment(props.LastReference).fromNow()}</Badge>;

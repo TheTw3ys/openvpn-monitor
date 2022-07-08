@@ -1,13 +1,5 @@
-import fs, { readdirSync } from "fs";
-import { parse } from "path";
-import { TVPNState, TVPNStates } from "../lib/types";
-
-/*
-export const state: TVPNState = {
-  updatedAt: new Date(),
-  clients: {}
-};
-*/
+import fs from 'fs';
+import { TVPNState, TVPNStates } from '../lib/types';
 
 export const states: TVPNStates = {};
 
@@ -20,14 +12,14 @@ function findOpenVPNStatusFiles(openVPNLogPath: string): Array<TVPNStatusFile> {
   const files = fs.readdirSync(openVPNLogPath);
   const logfiles: Array<TVPNStatusFile> = [];
   files.forEach((fileName) => {
-    const segmentsOfFileName = fileName.split(".");
+    const segmentsOfFileName = fileName.split('.');
 
     if (
-      segmentsOfFileName[segmentsOfFileName.length - 2] === "status" &&
-      segmentsOfFileName[segmentsOfFileName.length - 1] === "log"
+      segmentsOfFileName[segmentsOfFileName.length - 2] === 'status' &&
+      segmentsOfFileName[segmentsOfFileName.length - 1] === 'log'
     ) {
       logfiles.push({
-        vpnName: segmentsOfFileName.slice(0, -2).join("."),
+        vpnName: segmentsOfFileName.slice(0, -2).join('.'),
         fileName,
       });
     }
@@ -43,14 +35,10 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
     clients: {},
   };
 
-  const start_online: number = lines.indexOf("OpenVPN CLIENT LIST");
-  const start_offline: number = lines.indexOf("ROUTING TABLE");
+  const start_online: number = lines.indexOf('OpenVPN CLIENT LIST');
+  const start_offline: number = lines.indexOf('ROUTING TABLE');
 
-  function get_lines(
-    lines: Array<string>,
-    min: number,
-    max: number
-  ): Array<string> {
+  function get_lines(lines: Array<string>, min: number, max: number): Array<string> {
     var end_lines: Array<string> = [];
     var count = max - min;
     for (let x = 0; x < Array(count).length; x++) {
@@ -63,9 +51,9 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   function getOnlineWorkLines(): Array<string> {
     for (let x = 0; x < lines.length; x++) {
       if (x == start_online) {
-        if (lines[x + 2].startsWith("Common")) {
+        if (lines[x + 2].startsWith('Common')) {
           const indexstart = lines.indexOf(lines[x + 3]);
-          const indexend = lines.indexOf("ROUTING TABLE") - 1;
+          const indexend = lines.indexOf('ROUTING TABLE') - 1;
           const worklines = get_lines(lines, indexstart, indexend + 1);
           return worklines;
         }
@@ -77,14 +65,10 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   function getOfflineWorkLines() {
     for (let x = 0; x < lines.length; x++) {
       if (x == start_offline) {
-        if (lines[x + 1].startsWith("Virtual")) {
+        if (lines[x + 1].startsWith('Virtual')) {
           const indexstart = lines.indexOf(lines[x + 2]);
-          const indexend = lines.indexOf("GLOBAL STATS");
-          const worklines: Array<string> = get_lines(
-            lines,
-            indexstart,
-            indexend
-          );
+          const indexend = lines.indexOf('GLOBAL STATS');
+          const worklines: Array<string> = get_lines(lines, indexstart, indexend);
           return worklines;
         }
       }
@@ -96,7 +80,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   const offline_members: Array<string> = getOfflineWorkLines();
 
   offline_members.forEach((offlineMember: string) => {
-    const details = offlineMember.split(",");
+    const details = offlineMember.split(',');
     const name = details[1];
 
     state.clients[name] = {
@@ -105,24 +89,23 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
       bytesSent: 0,
       connectedSince: null,
       LastReference: new Date(details[3]),
-      realIPV4Address: details[2] != null ? details[2].split(":")[0] : "",
+      realIPV4Address: details[2] != null ? details[2].split(':')[0] : '',
       virtualAddress: details[0],
       Online: false,
     };
   });
 
   online_members.forEach((onlineMember: string) => {
-    const details = onlineMember.split(",");
+    const details = onlineMember.split(',');
     const name = details[0];
-    //console.log(state.clients[name])
     const onlineClient = {
       bytesReceived: parseInt(details[2]),
       commonName: details[0],
       bytesSent: parseInt(details[3]),
       connectedSince: new Date(details[4]),
       LastReference: new Date(),
-      realIPV4Address: details[1] != null ? details[1].split(":")[0] : "",
-      virtualAddress: "", //TODO 1.
+      realIPV4Address: details[1] != null ? details[1].split(':')[0] : '',
+      virtualAddress: '',
       Online: true,
     };
     if (state.clients[name] != null) {
@@ -135,7 +118,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   state.updatedAt = new Date();
   offline_members.forEach((offlineMember: string) => {
     // redefining because virtualAddress is not accessible for onlineClients
-    const details = offlineMember.split(",");
+    const details = offlineMember.split(',');
     const name = details[1];
     const client = state.clients[name];
     const offlineClient = {
@@ -158,16 +141,9 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
 }
 
 export function parseVPNStatusLogs(openVPNLogPath: string) {
-  findOpenVPNStatusFiles(openVPNLogPath).forEach(
-    (logFileObject: TVPNStatusFile) => {
-      const file = fs
-        .readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`)
-        .toString();
-      const trimmed_log_file = file.split("\n"); //Array content
-      states[logFileObject.vpnName] = getWorkLines(
-        trimmed_log_file,
-        logFileObject.vpnName
-      );
-    }
-  );
+  findOpenVPNStatusFiles(openVPNLogPath).forEach((logFileObject: TVPNStatusFile) => {
+    const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
+    const trimmed_log_file = file.split('\n'); //Array content
+    states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
+  });
 }

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { TableApp } from "./components/ClientsTable";
-import { apiClient } from "./apiClient";
-import { BrowserRouter } from "react-router-dom";
-import { Container, Tabs, Tab } from "react-bootstrap";
-import moment from "moment";
-moment.locale("de")
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { apiClient } from './apiClient';
+import { BrowserRouter } from 'react-router-dom';
+import { VPNStatusTable } from './components/VPNStatusTable';
+import { Container, Tabs, Tab } from 'react-bootstrap';
+
 const App = () => {
   const [VPNNames, setVPNNames] = useState<Array<string>>([]);
 
@@ -25,15 +24,11 @@ const App = () => {
         <p></p>
         <h2>App</h2>
         <p>Hello from my first app</p>
-        <Tabs
-          defaultActiveKey="profile"
-          id="uncontrolled-tab-example"
-          className="mb-3"
-        >
+        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3">
           {VPNNames.map((name) => {
             return (
-              <Tab eventKey={name} title={name}>
-                <TableApp vpnName={name} />
+              <Tab key={name} eventKey={name} title={name}>
+                <VPNStatusTable vpnName={name} />
               </Tab>
             );
           })}
@@ -51,4 +46,4 @@ const OuterApp = () => {
   );
 };
 
-ReactDOM.render(<OuterApp />, document.getElementById("app-content"));
+ReactDOM.render(<OuterApp />, document.getElementById('app-content'));

@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { TVPNState } from "../../lib/types";
-import { apiClient } from "../apiClient";
-import { Container, Table, Tabs, Tab, Badge } from "react-bootstrap";
-import moment from "moment-timezone";
-import {
-  CreateReferenceBadge,
-  CreateSinceBadge,
-  CreateStatusBadge,
-} from "./Badge";
 
-type TableAppProps = {
+import React, { useState, useEffect } from 'react';
+import moment from 'moment-timezone';
+import { Table } from 'react-bootstrap';
+import { TVPNState } from '../../lib/types';
+import { apiClient } from '../apiClient';
+import { CreateReferenceBadge, CreateSinceBadge, CreateStatusBadge } from './Badge';
+
+type VPNStatusTableProps = {
   vpnName: string;
 };
 
-export const TableApp = (props: TableAppProps) => {
+export const VPNStatusTable = (props: VPNStatusTableProps) => {
   const [state, setState] = useState<TVPNState>({
     updatedAt: new Date(),
-    logname: "",
+    logname: '',
     clients: {},
   });
 
@@ -58,7 +55,7 @@ export const TableApp = (props: TableAppProps) => {
               connectedSinceObject = new Date(client.connectedSince);
             } else {
               connectedSinceObject = "/";
-            }
+           }
 
             return (
               <tr>

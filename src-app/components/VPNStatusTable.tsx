@@ -8,7 +8,7 @@ import { CreateReferenceBadge, CreateSinceBadge, CreateStatusBadge } from './Bad
 import { toReadableByteSize } from '../../lib/utils';
 import { TableHeadTriggerTooltip, TableLineTriggerTooltip } from './Tooltip';
 import 'moment/locale/de';
-import "moment/locale/en-gb"
+import 'moment/locale/en-gb';
 moment.locale('de');
 
 type VPNStatusTableProps = {
@@ -38,7 +38,7 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
     <div>
       <p>This Table was Updated at {moment(new Date()).tz('Europe/Berlin').format('L LTS')} </p>
       <Table striped bordered hover>
-        <thead >
+        <thead>
           <tr>
             <TableHeadTriggerTooltip TooltipString="The Name of the client in the OpenVPN" CollumnName="Common Name" />
             <TableHeadTriggerTooltip TooltipString="The IP-Address of the client" CollumnName="Source IP" />
@@ -84,9 +84,10 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
 
                 <td align="center">
                   <h4>
-                    <TableLineTriggerTooltip TooltipString={`${moment(new Date(connectedSinceObject)).fromNow()}`} LineName={
-                      <CreateSinceBadge SinceDate={connectedSinceObject} />} />
-
+                    <TableLineTriggerTooltip
+                      TooltipString={`${moment(new Date(connectedSinceObject)).fromNow()}`}
+                      LineName={<CreateSinceBadge SinceDate={connectedSinceObject} />}
+                    />
                   </h4>
                 </td>
 

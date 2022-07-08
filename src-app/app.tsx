@@ -30,7 +30,7 @@ const App = () => {
         <p></p>
       </Container>
       <Container>
-        <Tabs defaultActiveKey= {VPNNames[0]} id="VPNLog" className="mb-3">
+        <Tabs defaultActiveKey={VPNNames[0]} id="VPNLog" className="mb-3">
           {VPNNames.map((name) => {
             return (
               <Tab key={name} eventKey={name} title={name}>

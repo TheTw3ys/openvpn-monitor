@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
+import OverlayTrigger from 'react-bootstrap';
 import { Table } from 'react-bootstrap';
 import { TVPNState } from '../../lib/types';
 import { apiClient } from '../apiClient';
 import { CreateReferenceBadge, CreateSinceBadge, CreateStatusBadge } from './Badge';
+import { toReadableByteSize } from '../../lib/utils';
+import { TableHeadTriggerTooltip, TableLineTriggerTooltip } from './Tooltip';
+import 'moment/locale/de';
+import "moment/locale/en-gb"
+moment.locale('de');
 
 type VPNStatusTableProps = {
   vpnName: string;
@@ -30,18 +36,30 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
 
   return (
     <div>
-      <p>This Table was Updated at {new Date().toLocaleTimeString()} </p>
-      <Table>
-        <thead>
+      <p>This Table was Updated at {moment(new Date()).tz('Europe/Berlin').format('L LTS')} </p>
+      <Table striped bordered hover>
+        <thead >
           <tr>
-            <th>Common Name</th>
-            <th>Source IP</th>
-            <th>Virtual Address</th>
-            <th>Received Bytes</th>
-            <th>Sent Bytes</th>
-            <th>Connected since</th>
-            <th>Last Connection-Reference</th>
-            <th>Connection-Status</th>
+            <TableHeadTriggerTooltip TooltipString="The Name of the client in the OpenVPN" CollumnName="Common Name" />
+            <TableHeadTriggerTooltip TooltipString="The IP-Address of the client" CollumnName="Source IP" />
+            <TableHeadTriggerTooltip TooltipString="The virtual Address of the client" CollumnName="Virtual Address" />
+            <TableHeadTriggerTooltip
+              TooltipString="The Bytes the Server received from the client"
+              CollumnName="Received Bytes"
+            />
+            <TableHeadTriggerTooltip TooltipString="The Bytes the Server sent to the client" CollumnName="Sent Bytes" />
+            <TableHeadTriggerTooltip
+              TooltipString="The Date and time since the client is connected to the OpenVPN"
+              CollumnName="Connected since"
+            />
+            <TableHeadTriggerTooltip
+              TooltipString="The time since the last connection was made between the client and the OpenVPN"
+              CollumnName="Last Connection-Reference"
+            />
+            <TableHeadTriggerTooltip
+              TooltipString="If the Client has a connection to the OpenVPN"
+              CollumnName="Connection-Status"
+            />
           </tr>
         </thead>
 
@@ -61,12 +79,14 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
                 <td align="center">{client.commonName}</td>
                 <td align="center">{client.realIPV4Address}</td>
                 <td align="center">{client.virtualAddress}</td>
-                <td align="center">{client.bytesReceived}</td>
-                <td align="center">{client.bytesSent}</td>
+                <td align="center">{toReadableByteSize(client.bytesReceived)}</td>
+                <td align="center">{toReadableByteSize(client.bytesSent)}</td>
 
                 <td align="center">
                   <h4>
-                    <CreateSinceBadge SinceDate={connectedSinceObject} />
+                    <TableLineTriggerTooltip TooltipString={`${moment(new Date(connectedSinceObject)).fromNow()}`} LineName={
+                      <CreateSinceBadge SinceDate={connectedSinceObject} />} />
+
                   </h4>
                 </td>
 

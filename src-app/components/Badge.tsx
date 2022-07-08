@@ -1,6 +1,8 @@
 import moment from 'moment';
 import React from 'react';
 import { Badge } from 'react-bootstrap';
+import "moment/locale/de"
+import "moment/locale/en-gb"
 
 type CreateReferenceBadgeProps = {
   LastReference: Date;
@@ -15,7 +17,7 @@ type CreateStatusBadgeProps = {
 
 export function CreateReferenceBadge(props: CreateReferenceBadgeProps): React.ReactElement {
   console.log(props.LastReference);
-
+  moment.locale('de')
   const rightNow = new Date();
   const millisBetween = rightNow.getTime() - new Date(props.LastReference).getTime();
   let badgeType = '';
@@ -33,6 +35,7 @@ export function CreateReferenceBadge(props: CreateReferenceBadgeProps): React.Re
       }
     }
   }
+
   return <Badge bg={badgeType}>{moment(props.LastReference).fromNow()}</Badge>;
 }
 export function CreateSinceBadge(props: CreateSinceBadgeProps): React.ReactElement {

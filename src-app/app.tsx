@@ -4,7 +4,8 @@ import { TableApp } from "./components/ClientsTable";
 import { apiClient } from "./apiClient";
 import { BrowserRouter } from "react-router-dom";
 import { Container, Tabs, Tab } from "react-bootstrap";
-
+import moment from "moment";
+moment.locale("de")
 const App = () => {
   const [VPNNames, setVPNNames] = useState<Array<string>>([]);
 

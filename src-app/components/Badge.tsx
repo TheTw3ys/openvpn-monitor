@@ -1,12 +1,22 @@
-import moment from "moment";
+import moment, { lang } from "moment";
 import React from "react";
 import { Badge } from "react-bootstrap";
+import "moment/locale/de"
 
-type CreateBadgeProps = {
+type CreateReferenceBadgeProps = {
   LastReference: Date;
+  ConnectionStatus: boolean;
+};
+type CreateSinceBadgeProps = {
+  SinceDate: string;
+};
+type CreateStatusBadgeProps = {
+  boolean: boolean;
 };
 
-export function CreateBadge(props: CreateBadgeProps): React.ReactElement {
+export function CreateReferenceBadge(
+  props: CreateReferenceBadgeProps
+): React.ReactElement {
   console.log(props.LastReference);
 
   const rightNow = new Date();
@@ -14,13 +24,46 @@ export function CreateBadge(props: CreateBadgeProps): React.ReactElement {
     rightNow.getTime() - new Date(props.LastReference).getTime();
   let badgeType = "";
   if (millisBetween <= 360000) {
-    badgeType = "success";
+    badgeType = "success"; //below 6 min
   } else {
     if (millisBetween <= 1860000) {
-      badgeType = "warning";
+      badgeType = "warning"; //below 31 min
     } else {
-      badgeType = "danger";
+      // over 31 min
+      if (props.ConnectionStatus === true) {
+        badgeType = "danger";
+      } else {
+        badgeType = "dark";
+      }
     }
   }
   return <Badge bg={badgeType}>{moment(props.LastReference).fromNow()}</Badge>;
+}
+export function CreateSinceBadge(
+  props: CreateSinceBadgeProps
+): React.ReactElement {
+  let Since: any;
+  if (props.SinceDate != "/") {
+    Since = moment(new Date(props.SinceDate)).format("l LTS");
+  } else {
+    Since = "/";
+  }
+
+  return <Badge bg="secondary">{Since}</Badge>;
+}
+export function CreateStatusBadge(
+  props: CreateStatusBadgeProps
+): React.ReactElement {
+  let bool = props.boolean;
+  let response;
+  let badgeType;
+  if (bool == true) {
+    response = "Online";
+    badgeType = "success";
+  } else {
+    response = "Offline";
+    badgeType = "danger";
+  }
+
+  return <Badge bg={badgeType}>{response}</Badge>;
 }

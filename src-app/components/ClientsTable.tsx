@@ -3,7 +3,11 @@ import { TVPNState } from "../../lib/types";
 import { apiClient } from "../apiClient";
 import { Container, Table, Tabs, Tab, Badge } from "react-bootstrap";
 import moment from "moment-timezone";
-import { CreateBadge } from "./Badge";
+import {
+  CreateReferenceBadge,
+  CreateSinceBadge,
+  CreateStatusBadge,
+} from "./Badge";
 
 type TableAppProps = {
   vpnName: string;
@@ -35,27 +39,25 @@ export const TableApp = (props: TableAppProps) => {
         <thead>
           <tr>
             <th>Common Name</th>
-            <th>IPV4</th>
+            <th>Source IP</th>
             <th>Virtual Address</th>
             <th>Received Bytes</th>
             <th>Sent Bytes</th>
             <th>Connected since</th>
             <th>Last Connection-Reference</th>
-            <th>Online</th>
+            <th>Connection-Status</th>
           </tr>
         </thead>
 
         <tbody>
           {Object.keys(state.clients).map((clientName) => {
             const client = state.clients[clientName];
-            var connectedSinceString;
+            var connectedSinceObject;
 
             if (client.connectedSince != null) {
-              connectedSinceString = moment(client.connectedSince).format(
-                "ll LTS"
-              );
+              connectedSinceObject = new Date(client.connectedSince);
             } else {
-              connectedSinceString = "/";
+              connectedSinceObject = "/";
             }
 
             return (
@@ -65,11 +67,27 @@ export const TableApp = (props: TableAppProps) => {
                 <td align="center">{client.virtualAddress}</td>
                 <td align="center">{client.bytesReceived}</td>
                 <td align="center">{client.bytesSent}</td>
-                <td align="center">{connectedSinceString}</td>
+
                 <td align="center">
-                  <CreateBadge LastReference={client.LastReference} />
+                  <h4>
+                    <CreateSinceBadge SinceDate={connectedSinceObject} />
+                  </h4>
                 </td>
-                <td align="center">{`${client.Online}`}</td>
+
+                <td align="center">
+                  <h4>
+                    <CreateReferenceBadge
+                      LastReference={client.LastReference}
+                      ConnectionStatus={client.Online}
+                    />
+                  </h4>
+                </td>
+
+                <td align="center">
+                  <h4>
+                    <CreateStatusBadge boolean={client.Online} />
+                  </h4>
+                </td>
               </tr>
             );
           })}

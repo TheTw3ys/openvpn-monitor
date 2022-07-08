@@ -1,6 +1,6 @@
-const { renameSync, unlinkSync, appendFileSync } = require("fs");
-const { getSystemErrorMap } = require("util");
-const delete_file = require("./Requirements/delete_file");
+const { renameSync, unlinkSync, appendFileSync } = require('fs');
+const { getSystemErrorMap } = require('util');
+const delete_file = require('./Requirements/delete_file');
 function rename_file(file, renamed_file) {
   try {
     renameSync(file, renamed_file);
@@ -19,14 +19,11 @@ function create_file(filename, content) {
   }
 }
 
-let file = "./Files/text.txt";
+let file = './Files/text.txt';
 /*Be aware that if started from other folders "text.txt" is not the same*/
-let renamed_file = "./Files/hello.txt";
+let renamed_file = './Files/hello.txt';
 
 rename_file(renamed_file, file); /*renames the file*/
 rename_file(file, renamed_file); /*renames the file back to the original */
 delete_file(renamed_file); /* deletes the file */
-create_file(
-  renamed_file,
-  "Hi"
-); /* recreates the file so the cycle can be repeated */
+create_file(renamed_file, 'Hi'); /* recreates the file so the cycle can be repeated */

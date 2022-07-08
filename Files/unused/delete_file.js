@@ -1,4 +1,4 @@
-const { unlinkSync } = require("fs");
+const { unlinkSync } = require('fs');
 function delete_file(file) {
   try {
     unlinkSync(file);

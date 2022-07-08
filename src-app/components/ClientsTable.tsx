@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { TState } from "../../lib/types";
-import { apiClient } from "../apiClient";
-import { Container, Table } from "react-bootstrap";
+import React, { useState, useEffect } from 'react';
+import { TState } from '../../lib/types';
+import { apiClient } from '../apiClient';
+import { Container, Table } from 'react-bootstrap';
 
 /*
 const state = {
@@ -66,9 +66,9 @@ export const TableApp = () => {
     updatedAt: new Date(),
     clients: {},
   });
-  
+
   const pollState = async () => {
-    const huba = await apiClient.getState()
+    const huba = await apiClient.getState();
     console.log(huba);
     setState(huba);
   };
@@ -103,18 +103,18 @@ export const TableApp = () => {
               console.log(client);
               var connectedSinceString;
               const month = [
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
               ];
 
               if (client.connectedSince != null) {
@@ -123,7 +123,7 @@ export const TableApp = () => {
                   month[connectedSince.getMonth()]
                 } ${connectedSince.getDate()}, ${connectedSince.getFullYear()} ${connectedSince.toLocaleTimeString()}`;
               } else {
-                connectedSinceString = "/";
+                connectedSinceString = '/';
               }
               const lastReference = new Date(client.LastReference);
 

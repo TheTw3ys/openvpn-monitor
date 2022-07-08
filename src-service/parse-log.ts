@@ -1,5 +1,5 @@
-import fs from "fs";
-import { TState } from "../lib/types";
+import fs from 'fs';
+import { TState } from '../lib/types';
 
 export const state: TState = {
   updatedAt: new Date(),
@@ -7,14 +7,10 @@ export const state: TState = {
 };
 
 function getWorkLines(lines: Array<string>) {
-  const start_online: number = lines.indexOf("OpenVPN CLIENT LIST");
-  const start_offline: number = lines.indexOf("ROUTING TABLE");
+  const start_online: number = lines.indexOf('OpenVPN CLIENT LIST');
+  const start_offline: number = lines.indexOf('ROUTING TABLE');
 
-  function get_lines(
-    lines: Array<string>,
-    min: number,
-    max: number
-  ): Array<string> {
+  function get_lines(lines: Array<string>, min: number, max: number): Array<string> {
     var end_lines: Array<string> = [];
     var count = max - min;
     for (let x = 0; x < Array(count).length; x++) {
@@ -27,9 +23,9 @@ function getWorkLines(lines: Array<string>) {
   function getOnlineWorkLines(): Array<string> {
     for (let x = 0; x < lines.length; x++) {
       if (x == start_online) {
-        if (lines[x + 2].startsWith("Common")) {
+        if (lines[x + 2].startsWith('Common')) {
           const indexstart = lines.indexOf(lines[x + 3]);
-          const indexend = lines.indexOf("ROUTING TABLE") - 1;
+          const indexend = lines.indexOf('ROUTING TABLE') - 1;
           const worklines = get_lines(lines, indexstart, indexend + 1);
           return worklines;
         }
@@ -41,14 +37,10 @@ function getWorkLines(lines: Array<string>) {
   function getOfflineWorkLines() {
     for (let x = 0; x < lines.length; x++) {
       if (x == start_offline) {
-        if (lines[x + 1].startsWith("Virtual")) {
+        if (lines[x + 1].startsWith('Virtual')) {
           const indexstart = lines.indexOf(lines[x + 2]);
-          const indexend = lines.indexOf("GLOBAL STATS");
-          const worklines: Array<string> = get_lines(
-            lines,
-            indexstart,
-            indexend
-          );
+          const indexend = lines.indexOf('GLOBAL STATS');
+          const worklines: Array<string> = get_lines(lines, indexstart, indexend);
           return worklines;
         }
       }
@@ -60,7 +52,7 @@ function getWorkLines(lines: Array<string>) {
   const offline_members: Array<string> = getOfflineWorkLines();
 
   offline_members.forEach((offlineMember: string) => {
-    const details = offlineMember.split(",");
+    const details = offlineMember.split(',');
     const name = details[1];
 
     state.clients[name] = {
@@ -69,14 +61,14 @@ function getWorkLines(lines: Array<string>) {
       bytesSent: 0,
       connectedSince: null,
       LastReference: new Date(details[3]),
-      realIPV4Address: details[2] != null ? details[2].split(":")[0] : "",
+      realIPV4Address: details[2] != null ? details[2].split(':')[0] : '',
       virtualAddress: details[0],
       Online: false,
     };
   });
 
   online_members.forEach((onlineMember: string) => {
-    const details = onlineMember.split(",");
+    const details = onlineMember.split(',');
     const name = details[0];
     //console.log(state.clients[name])
     const onlineClient = {
@@ -85,8 +77,8 @@ function getWorkLines(lines: Array<string>) {
       bytesSent: parseInt(details[3]),
       connectedSince: new Date(details[4]),
       LastReference: new Date(),
-      realIPV4Address: details[1] != null ? details[1].split(":")[0] : "",
-      virtualAddress: "", //TODO 1.
+      realIPV4Address: details[1] != null ? details[1].split(':')[0] : '',
+      virtualAddress: '', //TODO 1.
       Online: true,
     };
     if (state.clients[name] != null) {
@@ -99,7 +91,7 @@ function getWorkLines(lines: Array<string>) {
   state.updatedAt = new Date();
   offline_members.forEach((offlineMember: string) => {
     // redefining because virtualAddress is not accessible for onlineClients
-    const details = offlineMember.split(",");
+    const details = offlineMember.split(',');
     const name = details[1];
     const client = state.clients[name];
     const offlineClient = {
@@ -121,7 +113,7 @@ function getWorkLines(lines: Array<string>) {
 }
 
 export function parseVPNStatusLog() {
-  const file = fs.readFileSync("./Files/vpn-status.log", "utf-8");
-  const trimmed_log_file = file.split("\n"); //Array content
+  const file = fs.readFileSync('./Files/vpn-status.log', 'utf-8');
+  const trimmed_log_file = file.split('\n'); //Array content
   getWorkLines(trimmed_log_file);
 }

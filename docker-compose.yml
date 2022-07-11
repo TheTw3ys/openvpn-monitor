@@ -35,8 +35,6 @@ services:
     image: 'openvpn-monitor:v1.0.0'
     ports:
       - '7749:7749'
-    depends_on:
-      - communicator-service
     volumes:
       - './config.json:/usr/src/app/config.json'
     env_file:

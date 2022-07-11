@@ -33,9 +33,10 @@ export function TableLineTriggerTooltip(props: TableLineTriggerTooltipProps) {
     </Tooltip>
   );
   moment.locale('en-gb');
+  let lineName = props.LineName;
   return (
     <OverlayTrigger placement="top" delay={{ show: 250, hide: 20 }} overlay={renderTooltip}>
-      <td>{props.LineName}</td>
+      <td>{lineName}</td>
     </OverlayTrigger>
   );
 }

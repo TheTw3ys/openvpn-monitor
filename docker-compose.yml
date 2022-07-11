@@ -4,7 +4,8 @@ networks:
     driver: bridge
     name: openvpn-network
 x-default-config:
-  networks: &ref_0
+  networks:
+    &ref_0
     - openvpn-network
   restart: always
 
@@ -34,7 +35,7 @@ services:
     networks: *ref_0
     image: 'openvpn-monitor:v1.0.0'
     ports:
-      - '7749:7749'
+      - '7749:3000'
     volumes:
       - './config.json:/usr/src/app/config.json'
     env_file:
@@ -44,7 +45,7 @@ services:
         - CMD
         - curl
         - '--fail'
-        - 'http://localhost:3000/api/v1/version'
+        - 'http://localhost:7749/api/v1/version'
       retries: 5
       timeout: 10s
       interval: 10s

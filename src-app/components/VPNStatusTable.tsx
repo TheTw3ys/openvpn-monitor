@@ -70,7 +70,6 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
           {Object.keys(state.clients).map((clientName) => {
             const client = state.clients[clientName];
             var connectedSinceObject;
-
             if (client.connectedSince != null) {
               connectedSinceObject = new Date(client.connectedSince);
             } else {

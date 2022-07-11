@@ -4,8 +4,7 @@ networks:
     driver: bridge
     name: openvpn-network
 x-default-config:
-  networks:
-    &ref_0
+  networks: &ref_0
     - openvpn-network
   restart: always
 
@@ -39,7 +38,7 @@ services:
     volumes:
       - './config.json:/usr/src/app/config.json'
     env_file:
-      - .env
+      - '.env:/usr/src/app/.env'
     healthcheck:
       test:
         - CMD

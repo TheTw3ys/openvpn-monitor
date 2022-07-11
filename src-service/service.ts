@@ -7,15 +7,30 @@ import express from 'express';
 import { info } from './utils';
 import { defineAllRoutes } from './routes';
 import { parseVPNStatusLogs } from './parse-log';
-
-const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || './example-logs';
+import dotenv from 'dotenv';
+dotenv.config();
+const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || '/example-logs';
 const LISTEN_HOST = process.env.LISTEN_HOST || '0.0.0.0';
-const LISTEN_PORT = process.env.LISTEN_PORT || 3000;
+const LISTEN_PORT = process.env.LISTEN_PORT || 3001;
 const PUBLIC_PATH = (
   fs.existsSync(process.env.PUBLIC_PATH || '')
     ? process.env.PUBLIC_PATH
-    : path.resolve(path.normalize(__dirname + '/../public'))
+    : path.resolve(path.normalize(__dirname + '/public'))
 ) as string;
+
+console.log(
+  {
+    OPENVPN_LOG_PATH,
+    LISTEN_HOST,
+    LISTEN_PORT,
+    PUBLIC_PATH,
+  },
+  process.env.toString(),
+);
+
+const files = fs.readdirSync('./');
+console.log(files);
+
 //const file = fs.readFileSync("./Files/vpn-status.log", "utf-8");
 //const trimmed_log_file = file.split("\n"); //Array content
 

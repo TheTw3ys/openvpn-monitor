@@ -16,7 +16,6 @@ type CreateStatusBadgeProps = {
 };
 
 export function CreateReferenceBadge(props: CreateReferenceBadgeProps): React.ReactElement {
-  console.log(props.LastReference);
   moment.locale('de');
   const rightNow = new Date();
   const millisBetween = rightNow.getTime() - new Date(props.LastReference).getTime();

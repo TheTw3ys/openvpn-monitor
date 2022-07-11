@@ -9,5 +9,4 @@ COPY .env ./
 COPY /src-service ./src-service
 COPY /src-app ./src-app
 ENV NODE_ENV=development
-
 CMD [ "node", "./service.js"]

@@ -6,3 +6,4 @@ public/js/bundle.js.map
 ./example-logs/*
 TODO
 .env
+test.ts

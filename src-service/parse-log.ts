@@ -1,7 +1,24 @@
 import fs from 'fs';
-import { TVPNState, TVPNStates } from '../lib/types';
+import { OnlineClient, TVPNState, TVPNStates } from '../lib/types';
 
 export const states: TVPNStates = {};
+
+import { InfluxDB, Point } from '@influxdata/influxdb-client';
+import dotenv from 'dotenv';
+dotenv.config();
+// You can generate an API token from the "API Tokens Tab" in the UI
+const token = process.env.INFLUXDB_TOKEN || '';
+const org = process.env.INFLUXDB_ORG || '';
+const bucket = process.env.INFLUXDB_BUCKET || '';
+let INFLUXDB_LINK;
+INFLUXDB_LINK = process.env.INFLUXDB_LINK;
+if (process.env.NODE_ENV !== 'development') {
+  INFLUXDB_LINK = "http://influx";
+}
+
+const client = new InfluxDB({ url: 'http://127.0.0.1:8086', token: token });
+const writeApi = client.getWriteApi(org, bucket);
+
 
 type TVPNStatusFile = {
   vpnName: string;
@@ -121,7 +138,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
     const details = offlineMember.split(',');
     const name = details[1];
     const client = state.clients[name];
-    const offlineClient = {
+    const offlineClient: OnlineClient = {
       bytesReceived: client.bytesReceived,
       commonName: client.commonName,
       bytesSent: client.bytesSent,
@@ -136,15 +153,31 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
     } else {
       state.clients[name] = offlineClient;
     }
+
+
   });
   return state;
 }
 
+
 export function parseVPNStatusLogs(openVPNLogPath: string) {
-  findOpenVPNStatusFiles(openVPNLogPath).forEach((logFileObject: TVPNStatusFile) => {
+  findOpenVPNStatusFiles(openVPNLogPath).forEach(async (logFileObject: TVPNStatusFile) => {
     const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
     const trimmed_log_file = file.split('\n'); //Array content
     states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
+    Object.keys(states[logFileObject.vpnName].clients).map(async (clientName) => {
+      const client: OnlineClient = states[logFileObject.vpnName].clients[clientName]
+      writeApi.useDefaultTags({ host: logFileObject.vpnName});
+      const bytesReceivedPoint = new Point(clientName).floatField('Bytes_Received', client.bytesReceived);
+      // bytesReceivedPoint.timestamp(client.LastReference);      // FOR ACTIVE TESTING
+      const bytesSentPoint = new Point(clientName).floatField('Bytes_Sent', client.bytesSent);
+      
+      writeApi.writePoints([bytesReceivedPoint, bytesSentPoint]);
+
+      console.log('Wrote Line');
+    })
+    await writeApi.flush()
+    // writeApi.close()
   });
   return findOpenVPNStatusFiles(openVPNLogPath);
 }

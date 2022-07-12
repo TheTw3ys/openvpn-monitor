@@ -21,6 +21,7 @@
     "create-docker-manifest": "docker manifest create n0vum/openvpn-monitor:v1.0.1 --amend n0vum/openvpn-monitor:v1.0.1-amd64 --amend n0vum/openvpn-monitor:v1.0.1-arm64"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.27.0",
     "@types/express": "^4.17.13",
     "@types/morgan": "^1.9.3",
     "axios": "^0.27.2",

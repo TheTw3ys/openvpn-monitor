@@ -1,2 +1,10 @@
 Renaming *status.log -File creates new Tab but won't remove old Tab.
--- Probably at src-app/app.tsx line 15.
+-- Probably at ./src-app/app.tsx line 15.
+
+InfluxDB not yet grouping clients by filename           ****DONE****
+-- at ./src-service/parse-log.ts line 165
+
+
+
+InfluxDB not yet using filepoints 
+-- at ./src-service/parse-log.ts line 165

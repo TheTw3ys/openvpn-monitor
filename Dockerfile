@@ -8,5 +8,5 @@ COPY /.build/service.js ./
 COPY .env ./
 COPY /src-service ./src-service
 COPY /src-app ./src-app
-ENV NODE_ENV=development
+ENV NODE_ENV=docker
 CMD [ "node", "./service.js"]

@@ -7,30 +7,34 @@ import express from 'express';
 import { info } from './utils';
 import { defineAllRoutes } from './routes';
 import { parseVPNStatusLogs } from './parse-log';
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || '/example-logs';
 const LISTEN_HOST = process.env.LISTEN_HOST || '0.0.0.0';
 const LISTEN_PORT = process.env.LISTEN_PORT || 3000;
-let PATH_SUFFIX
-if (process.env.NODE_ENV === "development"){
-PATH_SUFFIX = process.env.PATH_SUFFIX1
-}else {PATH_SUFFIX = process.env.PATHSUFFIX2}
+let PATH_SUFFIX;
+PATH_SUFFIX = process.env.PATH_SUFFIX2;
+if (process.env.NODE_ENV !== 'development') {
+  PATH_SUFFIX = process.env.PATH_SUFFIX1;
+}
+console.log(PATH_SUFFIX);
 const PUBLIC_PATH = (
   fs.existsSync(process.env.PUBLIC_PATH || '')
     ? process.env.PUBLIC_PATH
     : path.resolve(path.normalize(__dirname + PATH_SUFFIX))
 ) as string;
 
-console.log(__dirname)
+console.log(__dirname);
 
-
-console.log({
-  OPENVPN_LOG_PATH,
-  LISTEN_HOST,
-  LISTEN_PORT,
-  PUBLIC_PATH,
-});
+console.log(
+  {
+    OPENVPN_LOG_PATH,
+    LISTEN_HOST,
+    LISTEN_PORT,
+    PUBLIC_PATH,
+  },
+  process.env.NODE_ENV,
+);
 
 //const file = fs.readFileSync("./Files/vpn-status.log", "utf-8");
 //const trimmed_log_file = file.split("\n"); //Array content
@@ -44,10 +48,10 @@ app.use(express.static(PUBLIC_PATH));
 
 defineAllRoutes(app);
 try {
-  app.use((req, res) => res.sendFile(path.normalize(PUBLIC_PATH + `/index.html`)));  
+  app.use((req, res) => res.sendFile(path.normalize(PUBLIC_PATH + `/index.html`)));
 } catch (error) {
-  app.use((req, res)=> res.sendFile(path.normalize(`${__dirname}/public/index.html`)))
-} 
+  app.use((req, res) => res.sendFile(path.normalize(`${__dirname}/public/index.html`)));
+}
 
 parseVPNStatusLogs(OPENVPN_LOG_PATH);
 setInterval(() => parseVPNStatusLogs(OPENVPN_LOG_PATH), 4000);

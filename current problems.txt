@@ -1,0 +1,2 @@
+Renaming *status.log -File creates new Tab but won't remove old Tab.
+-- Probably at src-app/app.tsx line 15.

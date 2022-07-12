@@ -52,7 +52,6 @@ try {
 } catch (error) {
   app.use((req, res) => res.sendFile(path.normalize(`${__dirname}/public/index.html`)));
 }
-
 parseVPNStatusLogs(OPENVPN_LOG_PATH);
 setInterval(() => parseVPNStatusLogs(OPENVPN_LOG_PATH), 4000);
 

@@ -146,4 +146,5 @@ export function parseVPNStatusLogs(openVPNLogPath: string) {
     const trimmed_log_file = file.split('\n'); //Array content
     states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
   });
+  return findOpenVPNStatusFiles(openVPNLogPath);
 }

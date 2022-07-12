@@ -32,13 +32,17 @@ services:
 
   openvpn-monitor:
     networks: *ref_0
-    image: 'n0vum/openvpn-monitor:v1.0.0'
+    image: 'n0vum/openvpn-monitor:v1.0.1-amd64'
     ports:
       - '7749:3000'
     volumes:
       - './config.json:/usr/src/app/config.json'
+      - './src-app:/usr/src/app/src-app'
+      - './src-service:/usr/src/app/src-service'
+      - './example-logs:/usr/src/app/example-logs'
+
     env_file:
-      - '.env:/usr/src/app/.env'
+      - .env
     healthcheck:
       test:
         - CMD

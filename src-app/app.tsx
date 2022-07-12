@@ -8,11 +8,11 @@ import moment from 'moment';
 import 'moment/locale/de';
 
 moment.locale('de');
-const App = () => {
-  const [VPNNames, setVPNNames] = useState<Array<string>>([]);
+var App = () => {
+  var [VPNNames, setVPNNames] = useState<Array<string>>([]);
 
-  const pollVPNNames = async () => {
-    const names = await apiClient.getVPNNames();
+  var pollVPNNames = async () => {
+    var names = await apiClient.getVPNNames(); // old names dont get removed.
     console.log(names);
     setVPNNames(names);
   };

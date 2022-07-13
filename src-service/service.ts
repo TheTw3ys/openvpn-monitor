@@ -12,7 +12,7 @@ import { addStatisticsToInfluxDB, parseVPNStatusLogs } from './parse-log';
 const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || './example-logs';
 const PUBLIC_PATH = process.env.PUBLIC_PATH || path.resolve(path.normalize(__dirname + '/../public'));
 const LISTEN_HOST = process.env.LISTEN_HOST || '0.0.0.0';
-const LISTEN_PORT = process.env.LISTEN_PORT || 3000;
+const LISTEN_PORT = process.env.LISTEN_PORT || '3000';
 const INFLUXDB_IS_USED = stringToBoolean(process.env.INFLUXDB_IS_USED) || false;
 const INFLUXDB_URL = process.env.INFLUXDB_URL || 'http://127.0.0.1:8086';
 const INFLUXDB_TOKEN =
@@ -47,7 +47,7 @@ setInterval(() => {
   addStatisticsToInfluxDB();
 }, 4000);
 
-webServer.listen(LISTEN_PORT, parseInt(LISTEN_HOST), () => {
+webServer.listen(parseInt(LISTEN_PORT), LISTEN_HOST, () => {
   info(`The openvpn service is listening on [32m${LISTEN_HOST}[0m:[35m${LISTEN_PORT}[0m`);
   info(`|-> Serving conmtent from: [35m${PUBLIC_PATH}[0m`);
 });

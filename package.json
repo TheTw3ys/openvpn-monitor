@@ -10,7 +10,7 @@
   "scripts": {
     "watch": "yarn build-app --watch",
     "dev": "yarn build && node ./.build/service.js",
-    "start": "yarn build && node ./.build/service.js",
+    "start": "yarn build && dotenv-load node ./.build/service.js",
     "build": "yarn build-app && yarn build-service",
     "build-app": "node scripts/build-app.mjs",
     "build-service": "node scripts/build-service.mjs",

@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "watch": "yarn build-app --watch",
-    "dev": "yarn build && dotenv-load node ./.build/service.js",
+    "dev": "yarn build && node ./.build/service.js",
     "start": "yarn build && node ./.build/service.js",
     "build": "yarn build-app && yarn build-service",
     "build-app": "node scripts/build-app.mjs",
@@ -40,7 +40,8 @@
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "ts-node": "^10.8.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "web-pingjs": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^18.0.1"

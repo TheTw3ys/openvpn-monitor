@@ -1,7 +1,8 @@
 import fs from 'fs';
 import { OnlineClient, TVPNState, TVPNStates } from '../lib/types';
 import { InfluxDB, Point } from '@influxdata/influxdb-client';
-import { writeApi } from './influx';
+import { client, writeApi } from './influx';
+import { delay } from './utils';
 
 export const states: TVPNStates = {};
 
@@ -141,26 +142,51 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   });
   return state;
 }
+async function addStatisticsToInfluxDB() {
+  console.log(states);
+  try {
+    Object.keys(states).forEach((vpnName) => {
+      const vpn = states[vpnName];
+      try {
+        Object.keys(vpn.clients).forEach((clientName) => {
+          const oneclient = vpn.clients[clientName];
+          console.log('clientName:', clientName);
+          writeApi.useDefaultTags({ host: vpnName });
+
+          writeApi.writePoints([
+            new Point(clientName).floatField('Bytes_Received', oneclient.bytesReceived), //.timestamp(client.LastReference);      // FOR ACTIVE TESTING,
+            new Point(clientName).floatField('Bytes_Sent', oneclient.bytesSent),
+          ]);
+
+          console.log('Wrote Line');
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  } catch (error) {
+    console.error('addStatisticsToInfluxDB in parse-log\n\n', error);
+  }
+  await writeApi.flush();
+}
 
 export function parseVPNStatusLogs(openVPNLogPath: string) {
-  findOpenVPNStatusFiles(openVPNLogPath).forEach(async (logFileObject: TVPNStatusFile) => {
-    const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
-    const trimmed_log_file = file.split('\n'); //Array content
-    states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
-    Object.keys(states[logFileObject.vpnName].clients).map(async (clientName) => {
-      const client: OnlineClient = states[logFileObject.vpnName].clients[clientName];
-      writeApi.useDefaultTags({ host: logFileObject.vpnName });
-      const bytesReceivedPoint = new Point(clientName).floatField('Bytes_Received', client.bytesReceived);
-      // bytesReceivedPoint.timestamp(client.LastReference);      // FOR ACTIVE TESTING
-      const bytesSentPoint = new Point(clientName).floatField('Bytes_Sent', client.bytesSent);
-
-      writeApi.writePoints([bytesReceivedPoint, bytesSentPoint]);
-      await writeApi.flush();
-
-      console.log('Wrote Line');
+  try {
+    findOpenVPNStatusFiles(openVPNLogPath).forEach(async (logFileObject: TVPNStatusFile) => {
+      const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
+      const trimmed_log_file = file.split('\n'); //Array content
+      states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
+      if (client) { //InfluxDB client
+        Object.keys(states[logFileObject.vpnName].clients).map(async (clientName) => {
+          await addStatisticsToInfluxDB();
+        });  
+      }
     });
+  } catch (error) {
+    console.error('parseVPNStatusLogs in parse-log \n\n', error);
+  }
 
-    // writeApi.close()
-  });
+  // writeApi.close()
+
   return findOpenVPNStatusFiles(openVPNLogPath);
 }

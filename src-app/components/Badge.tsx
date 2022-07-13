@@ -37,8 +37,9 @@ export function CreateReferenceBadge(props: CreateReferenceBadgeProps): React.Re
 
   return <Badge bg={badgeType}>{moment(props.LastReference).fromNow()}</Badge>;
 }
+
 export function CreateSinceBadge(props: CreateSinceBadgeProps): React.ReactElement {
-  let Since: any;
+  let Since: string;
   if (props.SinceDate != '/') {
     Since = moment(new Date(props.SinceDate)).format('l LTS');
   } else {
@@ -47,10 +48,11 @@ export function CreateSinceBadge(props: CreateSinceBadgeProps): React.ReactEleme
 
   return <Badge bg="secondary">{Since}</Badge>;
 }
+
 export function CreateStatusBadge(props: CreateStatusBadgeProps): React.ReactElement {
   let bool = props.boolean;
-  let response;
-  let badgeType;
+  let response: string;
+  let badgeType: string;
   if (bool == true) {
     response = 'Online';
     badgeType = 'success';

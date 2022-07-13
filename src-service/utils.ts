@@ -86,3 +86,24 @@ export let success = (...args: Array<any>): void => {
     console.log(now(), 'Success:\x1b[32m', ...args, '\x1b[0m');
   }
 };
+
+export const stringToBoolean = (value: string | null | undefined): boolean | null => {
+  if (value != null && typeof value === 'string') {
+    switch (value.toLowerCase().trim()) {
+      case 'true':
+      case 'yes':
+      case '1':
+        return true;
+
+      case 'false':
+      case 'no':
+      case '0':
+      case null:
+        return false;
+
+      default:
+        return null;
+    }
+  }
+  return null;
+};

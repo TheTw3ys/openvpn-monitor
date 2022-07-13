@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import ReactDOM from 'react-dom';
 import { apiClient } from './apiClient';
 import { BrowserRouter } from 'react-router-dom';
 import { VPNStatusTable } from './components/VPNStatusTable';
 import { Container, Tabs, Tab } from 'react-bootstrap';
-import moment from 'moment';
+
 import 'moment/locale/de';
 
 moment.locale('de');
+
 var App = () => {
   var [VPNNames, setVPNNames] = useState<Array<string>>([]);
 
   var pollVPNNames = async () => {
     var names = await apiClient.getVPNNames(); // old names dont get removed.
-    console.log(names);
     setVPNNames(names);
   };
 

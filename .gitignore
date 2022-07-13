@@ -1,9 +1,7 @@
+./.env
+./example-logs/*
 .build/service.js
 node_modules
 public/js/bundle.js
 public/js/bundle.js.map
-./Files/unused/
-./example-logs/*
 TODO
-.env
-test.ts

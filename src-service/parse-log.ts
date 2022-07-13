@@ -142,52 +142,40 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   });
   return state;
 }
-async function addStatisticsToInfluxDB() {
-  console.log(states);
-  try {
-    Object.keys(states).forEach((vpnName) => {
-      const vpn = states[vpnName];
-      try {
-        Object.keys(vpn.clients).forEach((clientName) => {
-          const oneclient = vpn.clients[clientName];
-          console.log('clientName:', clientName);
-          writeApi.useDefaultTags({ host: vpnName });
-
-          writeApi.writePoints([
-            new Point(clientName).floatField('Bytes_Received', oneclient.bytesReceived), //.timestamp(client.LastReference);      // FOR ACTIVE TESTING,
-            new Point(clientName).floatField('Bytes_Sent', oneclient.bytesSent),
-          ]);
-
-          console.log('Wrote Line');
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    });
-  } catch (error) {
-    console.error('addStatisticsToInfluxDB in parse-log\n\n', error);
-  }
-  await writeApi.flush();
-}
 
 export function parseVPNStatusLogs(openVPNLogPath: string) {
   try {
-    findOpenVPNStatusFiles(openVPNLogPath).forEach(async (logFileObject: TVPNStatusFile) => {
+    findOpenVPNStatusFiles(openVPNLogPath).forEach((logFileObject: TVPNStatusFile) => {
       const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
       const trimmed_log_file = file.split('\n'); //Array content
       states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
-      if (client) {
-        //InfluxDB client
-        Object.keys(states[logFileObject.vpnName].clients).map(async (clientName) => {
-          await addStatisticsToInfluxDB();
-        });
-      }
     });
   } catch (error) {
     console.error('parseVPNStatusLogs in parse-log \n\n', error);
   }
+}
 
-  // writeApi.close()
-
-  return findOpenVPNStatusFiles(openVPNLogPath);
+export async function addStatisticsToInfluxDB() {
+  if (writeApi != null) {
+    try {
+      Object.keys(states).forEach((vpnName) => {
+        const vpn = states[vpnName];
+        try {
+          Object.keys(vpn.clients).forEach((clientName) => {
+            const oneclient = vpn.clients[clientName];
+            writeApi.useDefaultTags({ host: vpnName });
+            writeApi.writePoints([
+              new Point(clientName).floatField('Bytes_Received', oneclient.bytesReceived), //.timestamp(client.LastReference);      // FOR ACTIVE TESTING,
+              new Point(clientName).floatField('Bytes_Sent', oneclient.bytesSent),
+            ]);
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    } catch (error) {
+      console.error('addStatisticsToInfluxDB in parse-log\n\n', error);
+    }
+    await writeApi.flush();
+  }
 }

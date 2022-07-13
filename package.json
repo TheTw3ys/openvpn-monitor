@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "watch": "yarn build-app --watch",
-    "dev": "yarn build && NODE_ENV=development node ./.build/service.js",
+    "dev": "yarn build && dotenv-load node ./.build/service.js",
     "start": "yarn build && node ./.build/service.js",
     "build": "yarn build-app && yarn build-service",
     "build-app": "node scripts/build-app.mjs",

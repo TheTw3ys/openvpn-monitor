@@ -1,6 +1,10 @@
 const isBrowserFunction = new Function('try {return this === window;}catch(e){ return false;}');
 const isBrowser = isBrowserFunction();
 
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const colors = {
   Log: '#1F1F1F',
   Info: '#2D60B4',

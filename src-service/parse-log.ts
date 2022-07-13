@@ -176,10 +176,11 @@ export function parseVPNStatusLogs(openVPNLogPath: string) {
       const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
       const trimmed_log_file = file.split('\n'); //Array content
       states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
-      if (client) { //InfluxDB client
+      if (client) {
+        //InfluxDB client
         Object.keys(states[logFileObject.vpnName].clients).map(async (clientName) => {
           await addStatisticsToInfluxDB();
-        });  
+        });
       }
     });
   } catch (error) {

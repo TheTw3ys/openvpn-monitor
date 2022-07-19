@@ -8,8 +8,9 @@ import { defineAllRoutes } from './routes';
 import { initInfluxClient } from './influx';
 import { info, stringToBoolean } from './utils';
 import { addStatisticsToInfluxDB, parseVPNStatusLogs } from './parse-log';
+import { pathToFileURL } from 'url';
 
-const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || './example-logs';
+const OPENVPN_LOG_PATH = process.env.OPENVPN_LOG_PATH || path.resolve(path.normalize('./example-logs'));
 const PUBLIC_PATH = process.env.PUBLIC_PATH || path.resolve(path.normalize(__dirname + '/../public'));
 const LISTEN_HOST = process.env.LISTEN_HOST || '0.0.0.0';
 const LISTEN_PORT = process.env.LISTEN_PORT || '3000';

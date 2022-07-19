@@ -2,7 +2,9 @@ import fs from 'fs';
 import { OnlineClient, TVPNState, TVPNStates } from '../lib/types';
 import { InfluxDB, Point } from '@influxdata/influxdb-client';
 import { client, writeApi } from './influx';
-import { delay } from './utils';
+import path from 'path';
+import { StringMappingType } from 'typescript';
+
 
 export const states: TVPNStates = {};
 
@@ -38,8 +40,10 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
     clients: {},
   };
 
+
   const start_online: number = lines.indexOf('OpenVPN CLIENT LIST');
   const start_offline: number = lines.indexOf('ROUTING TABLE');
+  
 
   function get_lines(lines: Array<string>, min: number, max: number): Array<string> {
     var end_lines: Array<string> = [];
@@ -72,6 +76,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
           const indexstart = lines.indexOf(lines[x + 2]);
           const indexend = lines.indexOf('GLOBAL STATS');
           const worklines: Array<string> = get_lines(lines, indexstart, indexend);
+          console.log(worklines);
           return worklines;
         }
       }
@@ -140,14 +145,22 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
       state.clients[name] = offlineClient;
     }
   });
+  console.log(state);
   return state;
 }
 
 export function parseVPNStatusLogs(openVPNLogPath: string) {
   try {
     findOpenVPNStatusFiles(openVPNLogPath).forEach((logFileObject: TVPNStatusFile) => {
-      const file = fs.readFileSync(`${openVPNLogPath}/${logFileObject.fileName}`).toString();
-      const trimmed_log_file = file.split('\n'); //Array content
+      const file = fs
+        .readFileSync(path.resolve(path.normalize(`${openVPNLogPath}/${logFileObject.fileName}`)))
+        .toString().trim();
+        let trimmed_log_file= file.split('\n')
+        console.log(process.platform)
+      if (process.platform == "win32"){
+        trimmed_log_file = file.split('\r\n'); //Array content
+      }
+
       states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
     });
   } catch (error) {

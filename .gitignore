@@ -1,4 +1,4 @@
-./.env
+.env
 ./example-logs/*
 .build/service.js
 node_modules

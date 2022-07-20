@@ -34,6 +34,7 @@ The service can be configured using the following environment variables:
 | Variable           | Meaning                                              | Default Value                                    |
 | ------------------ | ---------------------------------------------------- | ------------------------------------------------ |
 | `OPENVPN_LOG_PATH` | The folder where the OpenVPN status files are stored | `./example-logs`                                 |
+| `FILE_OS_TYPE`     | The type of the operating system                     | `linux`                                          |
 | `LISTEN_HOST`      | The host(ipaddress) the service is bound to          | `0.0.0.0`                                        |
 | `LISTEN_PORT`      | The port the service is listening to                 | `3000`                                           |
 | `PUBLIC_PATH`      | Location of static content of the webserver          | `/../public`                                     |

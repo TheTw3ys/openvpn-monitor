@@ -5,7 +5,6 @@ import { client, writeApi } from './influx';
 import path from 'path';
 import { StringMappingType } from 'typescript';
 
-
 export const states: TVPNStates = {};
 
 type TVPNStatusFile = {
@@ -40,10 +39,8 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
     clients: {},
   };
 
-
   const start_online: number = lines.indexOf('OpenVPN CLIENT LIST');
   const start_offline: number = lines.indexOf('ROUTING TABLE');
-  
 
   function get_lines(lines: Array<string>, min: number, max: number): Array<string> {
     var end_lines: Array<string> = [];
@@ -149,18 +146,20 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
   return state;
 }
 
-export function parseVPNStatusLogs(openVPNLogPath: string) {
+export function parseVPNStatusLogs(openVPNLogPath: string, FILE_OS_TYPE) {
   try {
     findOpenVPNStatusFiles(openVPNLogPath).forEach((logFileObject: TVPNStatusFile) => {
       const file = fs
         .readFileSync(path.resolve(path.normalize(`${openVPNLogPath}/${logFileObject.fileName}`)))
-        .toString().trim();
-        let trimmed_log_file= file.split('\n')
-        console.log(process.platform)
-      if (process.platform == "win32"){
+        .toString()
+        .trim();
+
+      let trimmed_log_file = file.split('\n');
+      console.log(process.platform);
+      if (FILE_OS_TYPE == 'win32') {
         trimmed_log_file = file.split('\r\n'); //Array content
       }
-
+      console.log(trimmed_log_file);
       states[logFileObject.vpnName] = getWorkLines(trimmed_log_file, logFileObject.vpnName);
     });
   } catch (error) {

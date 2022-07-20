@@ -2,7 +2,7 @@ import { delay } from './utils';
 import { InfluxDB, WriteApi } from '@influxdata/influxdb-client';
 
 const org = 'openvpn';
-const bucket = 'client-statistics';
+const bucket = 'monitor';
 
 export let client: InfluxDB;
 export let writeApi: WriteApi;

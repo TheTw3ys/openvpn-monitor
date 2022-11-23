@@ -13,7 +13,7 @@ moment.locale('de');
 type VPNStatusTableProps = {
   vpnName: string;
 };
-
+let start  = 0; // used as test if "states" was already pulled
 export const VPNStatusTable = (props: VPNStatusTableProps) => {
   const [state, setState] = useState<TVPNState>({
     updatedAt: new Date(),
@@ -25,9 +25,14 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
     const huba = await apiClient.getState(props.vpnName);
     setState(huba);
   };
-
+  if (start === 0) {
+    console.log("polled once")  
+    poll();  // to let the user poll the items once (!) before interval ran through pollState
+  }
+  
   useEffect(() => {
     let timer = setInterval(pollState, 4000);
+      i++
     return () => {
       clearTimeout(timer);
     };

@@ -20,7 +20,10 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
     logname: '',
     clients: {},
   });
-
+  const poll = async () => {
+    const huba = await apiClient.getState(props.vpnName);
+    setState(huba);
+  }
   const pollState = async () => {
     const huba = await apiClient.getState(props.vpnName);
     setState(huba);
@@ -32,7 +35,7 @@ export const VPNStatusTable = (props: VPNStatusTableProps) => {
   
   useEffect(() => {
     let timer = setInterval(pollState, 4000);
-      i++
+      start++
     return () => {
       clearTimeout(timer);
     };

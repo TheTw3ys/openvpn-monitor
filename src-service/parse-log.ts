@@ -73,7 +73,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
           const indexstart = lines.indexOf(lines[x + 2]);
           const indexend = lines.indexOf('GLOBAL STATS');
           const worklines: Array<string> = get_lines(lines, indexstart, indexend);
-          console.log(worklines);
+          //console.log(worklines);
           return worklines;
         }
       }
@@ -142,7 +142,7 @@ function getWorkLines(lines: Array<string>, logname: string): TVPNState {
       state.clients[name] = offlineClient;
     }
   });
-  console.log(state);
+  //console.log(state);
   return state;
 }
 
